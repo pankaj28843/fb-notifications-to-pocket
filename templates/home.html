@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block title %}Home{% endblock title %} {% block content %}
+<div>
+    {% if encoded_url %}
+    <p>
+        <h3>Instructions</h3>
+        <h4>Step 1. Copy following link:</h4>
+        <br/>
+        <a href="https://fb-notifications-to-pocket.herokuapp.com/feed?{{ encoded_url }}" target="_blank">https://fb-notifications-to-pocket.herokuapp.com/feed?{{ encoded_url }}</a>
+        <br/><br/>
+        <h4>Step 2: Go to "Add new items from an RSS Feed to Pocket" recipe on IFTT using following link:</h4>
+        <a href="https://ifttt.com/recipes/9733-add-new-items-from-an-rss-feed-to-pocket" target="_blank"></a>
+        <h4>Step 3: Paste copied link in "Feed URL" field</h4>
+        <h4>Step 4: To get name of your Friend or Page who originally shared that link, pase following text in "Tags" field on the recipe page.</h4>
+        <p>{% raw %}ifttt,facebook,{{EntryAuthor}}{% endraw %}</p>
+    </p>
+    <br/>
+    {% endif %}
+    <h3>Add RSS Feed URL</h3>
+    <form role="form" action="" method="get" accept-charset="utf-8">
+        <div class="form-group">
+            <label>RSS Feed URL for Your Facebook notifications</label>
+            <input class="form-control" name="u" type="url" required placeholder="e.g. https://www.facebook.com/feeds/notifications.php?id=1310423225&viewer=1310423225&key=ARCj6wMGgpnpQpUk&format=rss20">
+            <p class="help-block">
+                <a href="https://www.facebook.com/help/212445198787494" target="_blank">Facebook Help - How do I create an RSS Feed for my Facebook notifications?</a>
+            </p>
+        </div>
+        <input type="submit">
+    </form>
+</div>
+{% endblock content %}
