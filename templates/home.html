@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% block title %}Home{% endblock title %} {% block content %}
 <div>
-    {% if encoded_url %}
+    {% if fb_feed_url %}
     <p>
         <h3>Instructions</h3>
         <h4>Step 1. Copy following link:</h4>
         <br/>
-        <a href="https://fb-notifications-to-pocket.herokuapp.com/feed?{{ encoded_url }}" target="_blank">https://fb-notifications-to-pocket.herokuapp.com/feed?{{ encoded_url }}</a>
+        <a href="https://fb-notifications-to-pocket.herokuapp.com/feed?{{ encoded_fb_feed_url }}" target="_blank">https://fb-notifications-to-pocket.herokuapp.com/feed?{{ encoded_fb_feed_url }}</a>
         <br/><br/>
         <h4>Step 2: Go to "Add new items from an RSS Feed to Pocket" recipe on IFTT using following link:</h4>
         <a href="https://ifttt.com/recipes/9733-add-new-items-from-an-rss-feed-to-pocket" target="_blank"></a>

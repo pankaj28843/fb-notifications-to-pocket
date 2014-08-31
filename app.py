@@ -10,29 +10,29 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    url = request.args.get('u', '').strip()
-    encoded_url = urllib.urlencode({"u": url})
+    fb_feed_url = request.args.get('u', '').strip()
+    encoded_fb_feed_url = urllib.urlencode({"u": fb_feed_url})
 
-    if url:
-        if not url.startswith("https://"):
+    if fb_feed_url:
+        if not fb_feed_url.startswith("https://"):
             raise ValueError("Need a secure URL.")
-        if not url.startswith("https://www.facebook.com/feeds/notifications.php?id="):
+        if not fb_feed_url.startswith("https://www.facebook.com/feeds/notifications.php?id="):
             raise ValueError("Need a valid FB notifications rss feed url.")
 
-    return render_template('home.html', url=url, encoded_url=encoded_url)
+    return render_template('home.html', fb_feed_url=fb_feed_url, encoded_fb_feed_url=encoded_fb_feed_url)
 
 
 @app.route('/feed')
 def filter_fb_feed():
-    url = request.args.get('u', '')
-    if not url:
+    fb_feed_url = request.args.get('u', '')
+    if not fb_feed_url:
         raise ValueError("URL can't be empty")
-    if not url.startswith("https://"):
+    if not fb_feed_url.startswith("https://"):
         raise ValueError("Need a secure URL.")
-    if not url.startswith("https://www.facebook.com/feeds/notifications.php?id="):
+    if not fb_feed_url.startswith("https://www.facebook.com/feeds/notifications.php?id="):
         raise ValueError("Need a valid FB notifications rss feed url.")
 
-    xml = filter_fb_rss_feeed(url)
+    xml = filter_fb_rss_feeed(fb_feed_url)
     return Response(response=xml,
                     status=200,
                     mimetype="application/rss+xml")
