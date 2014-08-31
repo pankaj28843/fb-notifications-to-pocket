@@ -30,7 +30,6 @@ def filter_fb_rss_feeed(fb_notifications_feed_url):
         fe.link(href=url)
         fe.published(entry.published)
         fe.author({'name': author_name})
-        fe.contributor([{'name': author_name}])
         fe.title(title)
 
-    return fg.rss_str(pretty=True)
+    return fg.atom_str(pretty=True)
