@@ -5,14 +5,27 @@ import requests
 from feedgen.feed import FeedGenerator
 from lxml import etree
 
+from cache import pylibmc_client
 
-def get_title_for_url(url):
+
+def fetch_title_for_url(url):
     try:
         response = requests.get(url)
         root = etree.HTML(response.text)
         return root.find(".//title").text
     except:
-        return ""
+        return None
+
+
+def get_title_for_url(url):
+    # get from cache
+    title = pylibmc_client.get(url)
+
+    if title is None:
+        title = fetch_title_for_url(url)
+        pylibmc_client.set(url, title)
+
+    return title
 
 
 def filter_fb_rss_feeed(fb_notifications_feed_url):
