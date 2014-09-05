@@ -23,12 +23,12 @@ def get_title_for_url(url):
 
     if title is None:
         title = fetch_title_for_url(url)
-        pylibmc_client.set(url, title)
+        pylibmc_client.set(url, title, expire=172800)
 
     return title
 
 
-def filter_fb_rss_feeed(fb_notifications_feed_url):
+def _filter_fb_rss_feeed(fb_notifications_feed_url):
     parsed_feed = feedparser.parse(fb_notifications_feed_url)
     filtered_entries = filter(
         lambda x: ' shared a link: "' in x.title, parsed_feed.entries)
@@ -58,3 +58,14 @@ def filter_fb_rss_feeed(fb_notifications_feed_url):
         fe.title(title)
 
     return fg.atom_str(pretty=True)
+
+
+def filter_fb_rss_feeed(fb_notifications_feed_url):
+    # get from cache
+    atom_str = pylibmc_client.get(fb_notifications_feed_url)
+
+    if atom_str is None:
+        atom_str = _filter_fb_rss_feeed(fb_notifications_feed_url)
+        pylibmc_client.set(fb_notifications_feed_url, atom_str, expire=60)
+
+    return atom_str
