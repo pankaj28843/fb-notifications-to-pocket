@@ -8,6 +8,36 @@ from lxml import etree
 
 from cache import pylibmc_client
 
+TITLES_FOR_ERROR_PAGES = [
+    '301 moved permanently',
+    '302 found',
+    '303 see other',
+    '307 temporary redirect',
+    '400 bad request',
+    '401 authorization required',
+    '402 payment required',
+    '403 forbidden',
+    '404 not found',
+    '405 not allowed',
+    '406 not acceptable',
+    '409 conflict',
+    '410 gone',
+    '411 length required',
+    '412 precondition failed',
+    '413 request entity too large',
+    '415 unsupported media type',
+    '416 requested range not satisfiable',
+    '400 request header or cookie too large',
+    '400 the ssl certificate error',
+    '400 no required ssl certificate was sent',
+    '400 the plain http request was sent to https port',
+    '500 internal server error',
+    '501 not implemented',
+    '502 bad gateway',
+    '503 service temporarily unavailable',
+    '507 insufficient storage'
+]
+
 
 def generate_key_for_text(text):
     return hashlib.sha512(text).hexdigest()
@@ -17,7 +47,10 @@ def fetch_title_for_url(url):
     try:
         response = requests.get(url)
         root = etree.HTML(response.text)
-        return root.find(".//title").text
+        title = root.find(".//title").text
+        if title in TITLES_FOR_ERROR_PAGES:
+            return None
+        return title
     except:
         return None
 
