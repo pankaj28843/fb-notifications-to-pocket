@@ -1,3 +1,4 @@
+import hashlib
 import urlparse
 
 import feedparser
@@ -6,6 +7,10 @@ from feedgen.feed import FeedGenerator
 from lxml import etree
 
 from cache import pylibmc_client
+
+
+def generate_key_for_text(text):
+    return hashlib.sha512(text).hexdigest()
 
 
 def fetch_title_for_url(url):
@@ -18,12 +23,13 @@ def fetch_title_for_url(url):
 
 
 def get_title_for_url(url):
+    key = generate_key_for_text(url)
     # get from cache
-    title = pylibmc_client.get(url)
+    title = pylibmc_client.get(key)
 
     if title is None:
         title = fetch_title_for_url(url)
-        pylibmc_client.set(url, title, expire=172800)
+        pylibmc_client.set(key, title, expire=172800)
 
     return title
 
@@ -61,11 +67,12 @@ def _filter_fb_rss_feeed(fb_notifications_feed_url):
 
 
 def filter_fb_rss_feeed(fb_notifications_feed_url):
+    key = generate_key_for_text(fb_notifications_feed_url)
     # get from cache
-    atom_str = pylibmc_client.get(fb_notifications_feed_url)
+    atom_str = pylibmc_client.get(key)
 
     if atom_str is None:
         atom_str = _filter_fb_rss_feeed(fb_notifications_feed_url)
-        pylibmc_client.set(fb_notifications_feed_url, atom_str, expire=60)
+        pylibmc_client.set(key, atom_str, expire=60)
 
     return atom_str
