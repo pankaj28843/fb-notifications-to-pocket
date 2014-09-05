@@ -1,8 +1,18 @@
 import urlparse
 
 import feedparser
+import requests
 from feedgen.feed import FeedGenerator
 from lxml import etree
+
+
+def get_title_for_url(url):
+    try:
+        response = requests.get(url)
+        root = etree.HTML(response.text)
+        return root.find(".//title").text
+    except:
+        return ""
 
 
 def filter_fb_rss_feeed(fb_notifications_feed_url):
@@ -24,6 +34,8 @@ def filter_fb_rss_feeed(fb_notifications_feed_url):
         author_name = entry.title.split(" shared a link: ")[0].strip()
         url = urlparse.parse_qs(
             urlparse.urlparse(root.findall(".//a")[-1].attrib["href"]).query)["u"][0]
+
+        title = get_title_for_url(url) or title
 
         fe = fg.add_entry()
         fe.id(entry.id)
