@@ -29,7 +29,7 @@ def get_title_for_url(url):
 
     if title is None:
         title = fetch_title_for_url(url)
-        pylibmc_client.set(key, title, expire=172800)
+        pylibmc_client.set(key, title, time=172800)
 
     return title
 
@@ -73,6 +73,6 @@ def filter_fb_rss_feeed(fb_notifications_feed_url):
 
     if atom_str is None:
         atom_str = _filter_fb_rss_feeed(fb_notifications_feed_url)
-        pylibmc_client.set(key, atom_str, expire=60)
+        pylibmc_client.set(key, atom_str, time=60)
 
     return atom_str
