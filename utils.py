@@ -48,7 +48,7 @@ def fetch_title_for_url(url):
         response = requests.get(url)
         root = etree.HTML(response.text)
         title = root.find(".//title").text
-        if title.lower().strip() in TITLES_FOR_ERROR_PAGES:
+        if response.status_code != 200 or title.lower().strip() in TITLES_FOR_ERROR_PAGES:
             return None
         return title
     except:
