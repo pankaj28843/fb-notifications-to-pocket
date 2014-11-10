@@ -179,16 +179,10 @@ def get_twitter_handle_from_twitrss_cdata(s):
 
 
 def _transform_twitrss_feed_to_link_feed(url):
-    url = "{}&replies={}".format(url, datetime.now().toordinal())
-    headers = {
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
-    }
-
-    # make a request to clear cloudflare cache
-    response = requests.get(url, headers=headers)
-    parsed_feed = feedparser.parse(response.text)
+    # Add timestamp to url
+    # This will disable caching
+    url = "{}&replies={}&replies=off".format(url, datetime.now().toordinal())
+    parsed_feed = feedparser.parse(url)
 
     fg = FeedGenerator()
     fg.id('https://fb-notifications-to-pocket.herokuapp.com/')
