@@ -222,6 +222,6 @@ def transform_twitrss_feed_to_link_feed(url):
 
     if atom_str is None:
         atom_str = _transform_twitrss_feed_to_link_feed(url)
-        pylibmc_client.set(key, atom_str, time=60)
+        pylibmc_client.set(key, atom_str, time=300)
 
     return atom_str
