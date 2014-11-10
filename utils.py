@@ -6,9 +6,10 @@ import json
 import feedparser
 import requests
 from lxml import etree
+from goose import Goose
+from feedgen.feed import FeedGenerator
 
 from cache import pylibmc_client
-from feedgen.feed import FeedGenerator
 
 
 EIGHT_WEEKS = 4838400 # in seconds
@@ -59,6 +60,14 @@ def fetch_title_for_url(url):
     except:
         return None
 
+def fetch_description_for_url(url):
+    try:
+        g = Goose()
+        article = g.extract(url=url)
+        return article.cleaned_text
+    except:
+        return ''
+
 
 def get_title_for_url(url):
     key = generate_key_for_text(url)
@@ -70,6 +79,18 @@ def get_title_for_url(url):
         pylibmc_client.set(key, title, time=EIGHT_WEEKS)
 
     return title
+
+
+def get_description_for_url(url):
+    key = "description:{}".format(generate_key_for_text(url))
+    # get from cache
+    description = pylibmc_client.get(key)
+
+    if description is None:
+        description = fetch_description_for_url(url)
+        pylibmc_client.set(key, description, time=EIGHT_WEEKS)
+
+    return description
 
 
 def _filter_fb_rss_feeed(url):
@@ -178,6 +199,7 @@ def _transform_twitrss_feed_to_link_feed(url):
 
         for link in links:
             title = get_title_for_url(link) or entry.title
+            description = get_description_for_url(link) or entry.description
             author_name = get_twitter_handle_from_twitrss_cdata(entry.title)
 
             fe = fg.add_entry()
@@ -187,6 +209,7 @@ def _transform_twitrss_feed_to_link_feed(url):
             fe.published(entry.published)
             fe.author({'name': author_name})
             fe.title(title)
+            fe.description(description)
 
     return fg.atom_str(pretty=True)
 
