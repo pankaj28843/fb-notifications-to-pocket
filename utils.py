@@ -181,7 +181,7 @@ def _transform_twitrss_feed_to_link_feed(url):
             id = generate_key_for_text("{} : {}".format(entry.guid, link))
             fe.id(id)
             fe.link(href=link)
-            fe.published(entry.pubDate)
+            fe.published(entry.published)
             fe.author({'name': author_name})
             fe.title(title)
 
