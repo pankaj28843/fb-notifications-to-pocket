@@ -10,6 +10,9 @@ from lxml import etree
 from cache import pylibmc_client
 from feedgen.feed import FeedGenerator
 
+
+EIGHT_WEEKS = 4838400 # in seconds
+
 TITLES_FOR_ERROR_PAGES = [
     '301 moved permanently',
     '302 found',
@@ -64,7 +67,7 @@ def get_title_for_url(url):
 
     if title is None:
         title = fetch_title_for_url(url)
-        pylibmc_client.set(key, title)
+        pylibmc_client.set(key, title, time=EIGHT_WEEKS)
 
     return title
 
@@ -142,7 +145,7 @@ def extract_links_from_a_tweet(url):
     if links_json is None:
         links = _extract_links_from_a_tweet(url)
         links_json = json.dumps(links)
-        pylibmc_client.set(key, links_json)
+        pylibmc_client.set(key, links_json, EIGHT_WEEKS)
     else:
         links = json.loads(links_json)
 
