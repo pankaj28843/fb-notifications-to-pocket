@@ -113,8 +113,8 @@ def filter_fb_rss_feeed(url):
     return atom_str
 
 
-def _extract_links_from_a_tweet(tweet_url):
-    response = requests.get(tweet_url)
+def _extract_links_from_a_tweet(url):
+    response = requests.get(url)
 
     if response.status_code != 200:
         return None
@@ -134,7 +134,7 @@ def _extract_links_from_a_tweet(tweet_url):
     return links
 
 
-def extract_links_from_a_tweet(tweet_url):
+def extract_links_from_a_tweet(url):
     key = "tweet:{}".format(generate_key_for_text(url))
     # get from cache
     links_json = pylibmc_client.get(key)
