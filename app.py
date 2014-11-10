@@ -1,9 +1,8 @@
 import os
 import urllib
 
-from flask import Flask, request, Response, render_template
-from utils import filter_fb_rss_feeed
-
+from flask import Flask, render_template, request, Response
+from utils import filter_fb_rss_feeed, transform_twitrss_feed_to_link_feed
 
 app = Flask(__name__)
 
@@ -33,6 +32,23 @@ def filter_fb_feed():
         raise ValueError("Need a valid FB notifications rss feed url.")
 
     xml = filter_fb_rss_feeed(fb_feed_url)
+    return Response(response=xml,
+                    status=200,
+                    mimetype="application/rss+xml")
+
+
+
+@app.route('/get-links-from-twitter-feed')
+def get_links_from_twitter_feed():
+    twitrss_feed_url = request.args.get('u', '')
+    if not twitrss_feed_url:
+        raise ValueError("URL can't be empty")
+    if not twitrss_feed_url.startswith("https://"):
+        raise ValueError("Need a secure URL.")
+    if not twitrss_feed_url.startswith("https://twitrss.me/twitter_user_to_rss"):
+        raise ValueError("Need a valid TwitRSS url for twitter user.")
+
+    xml = transform_twitrss_feed_to_link_feed(twitrss_feed_url)
     return Response(response=xml,
                     status=200,
                     mimetype="application/rss+xml")
