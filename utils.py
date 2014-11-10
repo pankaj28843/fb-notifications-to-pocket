@@ -56,10 +56,10 @@ def fetch_title_for_url(url):
         root = etree.HTML(response.text)
         title = root.find(".//title").text
         if response.status_code != 200 or title.lower().strip() in TITLES_FOR_ERROR_PAGES:
-            return None
+            return ''
         return title
     except:
-        return None
+        return ''
 
 def fetch_description_for_url(url):
     try:
