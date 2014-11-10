@@ -199,7 +199,7 @@ def _transform_twitrss_feed_to_link_feed(url):
 
         for link in links:
             title = get_title_for_url(link) or entry.title
-            description = get_description_for_url(link) or entry.description
+            # description = get_description_for_url(link) or entry.description
             author_name = get_twitter_handle_from_twitrss_cdata(entry.title)
 
             fe = fg.add_entry()
@@ -209,7 +209,7 @@ def _transform_twitrss_feed_to_link_feed(url):
             fe.published(entry.published)
             fe.author({'name': author_name})
             fe.title(title)
-            fe.description(description)
+            # fe.description(description)
 
     return fg.atom_str(pretty=True)
 
