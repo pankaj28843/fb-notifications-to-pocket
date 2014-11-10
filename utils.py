@@ -181,10 +181,8 @@ def get_twitter_handle_from_twitrss_cdata(s):
 
 
 def _transform_twitrss_feed_to_link_feed(url):
-    # Make a request to clear the cache
-    requests.get(url, headers={"cache-control": "no-cache", "pragma": "no-cache"})
-
-    parsed_feed = feedparser.parse(url)
+    headers={"cache-control": "no-cache", "pragma": "no-cache"}
+    parsed_feed = feedparser.parse(url, request_headers=headers)
 
     fg = FeedGenerator()
     fg.id('https://fb-notifications-to-pocket.herokuapp.com/')
@@ -224,6 +222,6 @@ def transform_twitrss_feed_to_link_feed(url):
 
     if atom_str is None:
         atom_str = _transform_twitrss_feed_to_link_feed(url)
-        pylibmc_client.set(key, atom_str, time=600)
+        pylibmc_client.set(key, atom_str, time=60)
 
     return atom_str
