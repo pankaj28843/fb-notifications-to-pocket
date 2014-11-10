@@ -181,6 +181,9 @@ def get_twitter_handle_from_twitrss_cdata(s):
 
 
 def _transform_twitrss_feed_to_link_feed(url):
+    # Make a request to clear the cache
+    requests.get(url, headers={"cache-control": "no-cache", "pragma": "no-cache"})
+
     parsed_feed = feedparser.parse(url)
 
     fg = FeedGenerator()
