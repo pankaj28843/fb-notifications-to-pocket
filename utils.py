@@ -168,12 +168,6 @@ def _transform_twitrss_feed_to_link_feed(url):
     fg.link(href='https://fb-notifications-to-pocket.herokuapp.com/')
 
     for entry in parsed_feed.entries:
-        root = etree.HTML(entry.summary_detail.value)
-        title = entry.title.split(" shared a link: ")[1].strip()[1:-2]
-        author_name = entry.title.split(" shared a link: ")[0].strip()
-        url = urlparse.parse_qs(
-            urlparse.urlparse(root.findall(".//a")[-1].attrib["href"]).query)["u"][0]
-
         links = extract_links_from_a_tweet(entry.link)
 
         if links is None:
