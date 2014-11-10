@@ -152,9 +152,6 @@ def _extract_links_from_a_tweet(url):
 
     links = map(lambda a: a.attrib["data-expanded-url"], p.xpath(".//a[@rel='nofollow']"))
 
-    if not links:
-        return []
-
     return links
 
 
@@ -181,7 +178,11 @@ def get_twitter_handle_from_twitrss_cdata(s):
 
 
 def _transform_twitrss_feed_to_link_feed(url):
-    headers = {"cache-control": "no-cache", "pragma": "no-cache"}
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+    }
 
     # make a request to clear cloudflare cache
     response = requests.get(url, headers=headers)
@@ -198,7 +199,7 @@ def _transform_twitrss_feed_to_link_feed(url):
     for entry in parsed_feed.entries:
         links = extract_links_from_a_tweet(entry.link)
 
-        if links is None:
+        if not links:
             continue
 
         for link in links:
