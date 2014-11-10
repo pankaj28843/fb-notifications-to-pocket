@@ -43,9 +43,9 @@ def get_links_from_twitter_feed():
     twitrss_feed_url = request.args.get('u', '')
     if not twitrss_feed_url:
         raise ValueError("URL can't be empty")
-    if not twitrss_feed_url.startswith("https://"):
+    if not twitrss_feed_url.startswith("http://"):
         raise ValueError("Need a secure URL.")
-    if not twitrss_feed_url.startswith("https://twitrss.me/twitter_user_to_rss"):
+    if not twitrss_feed_url.startswith("http://twitrss.me/twitter_user_to_rss"):
         raise ValueError("Need a valid TwitRSS url for twitter user.")
 
     xml = transform_twitrss_feed_to_link_feed(twitrss_feed_url)
