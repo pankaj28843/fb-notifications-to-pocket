@@ -166,7 +166,7 @@ def extract_links_from_a_tweet(url):
     if links_json is None:
         links = _extract_links_from_a_tweet(url)
         links_json = json.dumps(links)
-        pylibmc_client.set(key, links_json, EIGHT_WEEKS)
+        pylibmc_client.set(key, links_json, time=EIGHT_WEEKS)
     else:
         links = json.loads(links_json)
 
