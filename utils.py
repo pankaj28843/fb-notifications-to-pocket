@@ -141,19 +141,19 @@ def _extract_links_from_a_tweet(url):
     response = requests.get(url)
 
     if response.status_code != 200:
-        return None
+        return []
 
     root = etree.HTML(response.text)
 
     try:
         p = root.xpath(".//p[@class='js-tweet-text tweet-text']")[0]
     except IndexError:
-        return None
+        return []
 
     links = map(lambda a: a.attrib["data-expanded-url"], p.xpath(".//a[@rel='nofollow']"))
 
     if not links:
-        return None
+        return []
 
     return links
 
