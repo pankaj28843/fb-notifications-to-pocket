@@ -64,7 +64,7 @@ def get_title_for_url(url):
 
     if title is None:
         title = fetch_title_for_url(url)
-        pylibmc_client.set(key, title, time=172800)
+        pylibmc_client.set(key, title)
 
     return title
 
@@ -142,7 +142,7 @@ def extract_links_from_a_tweet(url):
     if links_json is None:
         links = _extract_links_from_a_tweet(url)
         links_json = json.dumps(links)
-        pylibmc_client.set(key, links_json, time=60)
+        pylibmc_client.set(key, links_json)
     else:
         links = json.loads(links_json)
 
