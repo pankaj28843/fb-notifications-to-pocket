@@ -2,6 +2,7 @@ import re
 import hashlib
 import urlparse
 import json
+from datetime import datetime
 
 import feedparser
 import requests
@@ -178,6 +179,7 @@ def get_twitter_handle_from_twitrss_cdata(s):
 
 
 def _transform_twitrss_feed_to_link_feed(url):
+    url = "{}&replies={}".format(url, datetime.now().toordinal())
     headers = {
         "Cache-Control": "no-cache, no-store, must-revalidate",
         "Pragma": "no-cache",
