@@ -13,8 +13,6 @@ from feedgen.feed import FeedGenerator
 from cache import pylibmc_client
 
 
-EIGHT_WEEKS = 4838400 # in seconds
-
 TITLES_FOR_ERROR_PAGES = [
     '301 moved permanently',
     '302 found',
@@ -77,7 +75,7 @@ def get_title_for_url(url):
 
     if title is None:
         title = fetch_title_for_url(url)
-        pylibmc_client.set(key, title, time=EIGHT_WEEKS)
+        pylibmc_client.set(key, title, time=0)
 
     return title
 
@@ -89,7 +87,7 @@ def get_description_for_url(url):
 
     if description is None:
         description = fetch_description_for_url(url)
-        pylibmc_client.set(key, description, time=EIGHT_WEEKS)
+        pylibmc_client.set(key, description, time=0)
 
     return description
 
@@ -164,7 +162,7 @@ def extract_links_from_a_tweet(url):
     if links_json is None:
         links = _extract_links_from_a_tweet(url)
         links_json = json.dumps(links)
-        pylibmc_client.set(key, links_json, time=EIGHT_WEEKS)
+        pylibmc_client.set(key, links_json, time=0)
     else:
         links = json.loads(links_json)
 
