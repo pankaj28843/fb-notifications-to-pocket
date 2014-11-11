@@ -190,7 +190,7 @@ def _transform_twitrss_feed_to_link_feed(url):
         '''Transform TwitRSS.me feed to a new rss feed which will be used by IFTTT''')
     fg.link(href='https://fb-notifications-to-pocket.herokuapp.com/')
 
-    links = []
+    all_links = []
 
     for entry in parsed_feed.entries:
         links = extract_links_from_a_tweet(entry.link)
@@ -199,10 +199,10 @@ def _transform_twitrss_feed_to_link_feed(url):
             continue
 
         for link in links:
-            if link in links:
+            if link in all_links:
                 continue
             else:
-                links.append(link)
+                all_links.append(link)
 
             title = get_title_for_url(link) or entry.title
             description = get_description_for_url(link) or entry.description
