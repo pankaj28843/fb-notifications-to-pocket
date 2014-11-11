@@ -59,7 +59,7 @@ def fetch_title_for_url(url):
     except:
         return ''
 
-def fetch_description_for_url(url):
+def fetch_content_for_url(url):
     try:
         g = Goose()
         article = g.extract(url=url)
@@ -80,16 +80,16 @@ def get_title_for_url(url):
     return title
 
 
-def get_description_for_url(url):
-    key = "description:{}".format(generate_key_for_text(url))
+def get_content_for_url(url):
+    key = "content:{}".format(generate_key_for_text(url))
     # get from cache
-    description = pylibmc_client.get(key)
+    content = pylibmc_client.get(key)
 
-    if description is None:
-        description = fetch_description_for_url(url)
-        pylibmc_client.set(key, description, time=0)
+    if content is None:
+        content = fetch_content_for_url(url)
+        pylibmc_client.set(key, content, time=0)
 
-    return description
+    return content
 
 
 def _filter_fb_rss_feeed(url):
@@ -205,7 +205,7 @@ def _transform_twitrss_feed_to_link_feed(url):
                 all_links.append(link)
 
             title = get_title_for_url(link) or entry.title
-            description = get_description_for_url(link) or entry.description
+            # content = get_content_for_url(link) or entry.content
             author_name = get_twitter_handle_from_twitrss_cdata(entry.title)
 
             fe = fg.add_entry()
@@ -215,7 +215,7 @@ def _transform_twitrss_feed_to_link_feed(url):
             fe.published(entry.published)
             fe.author({'name': author_name})
             fe.title(title)
-            fe.description(description)
+            # fe.content(content)
 
     return fg.atom_str(pretty=True)
 
